@@ -2,7 +2,8 @@
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Github](https://img.shields.io/badge/ThinkPRM-000000?style=for-the-badge&logo=github&logoColor=000&logoColor=white)](https://github.com/mukhal/thinkprm)
+[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Github](https://img.shields.io/badge/ThinkPRM-000000?style=for-the-badge&logo=github&logoColor=000&logoColor=white)](https://github.com/mukhal/thinkprm)  [![Data](https://img.shields.io/badge/Data-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=Gray
+)](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots)
 
 
 
@@ -22,6 +23,7 @@
 # 🎉News
 
 - **[2025-04-23]** Our [paper](https://arxiv.org/abs/2504.16828) is released on arxiv.
+- **[2025-04-24]** We uploaded our 1K verification CoT used to train ThinkPRM on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
 
 # 📖Introduction
 
