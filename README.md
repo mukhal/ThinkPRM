@@ -23,7 +23,7 @@
 # 🎉News
 
 - **[2025-04-23]** Our [paper](https://arxiv.org/abs/2504.16828) is released on arxiv.
-- **[2025-04-24]** We uploaded our 1K verification CoT used to train ThinkPRM on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
+- **[2025-04-24]** Our synthetic verification CoTs used to train ThinkPRM on are now on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
 
 # 📖Introduction
 
