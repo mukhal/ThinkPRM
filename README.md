@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)]([https://arxiv.org/abs/2504.16828](https://arxiv.org/abs/2504.16828))  [![Github](https://img.shields.io/badge/ThinkPRM-000000?style=for-the-badge&logo=github&logoColor=000&logoColor=white)]([https://github.com/mukhal/thinkprm](https://github.com/mukhal/thinkprm))
+[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Github](https://img.shields.io/badge/ThinkPRM-000000?style=for-the-badge&logo=github&logoColor=000&logoColor=white)](https://github.com/mukhal/thinkprm)
 
 
 
