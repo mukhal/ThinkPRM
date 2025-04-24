@@ -37,12 +37,11 @@ We introduce ThinkPRM, a collection of generative long CoT process reward models
 If you find ThinkPRM helpful, please cite us.
 
 ```bibtex
-@misc{khalifa2025,
+@article{khalifa2025,
       title={Process Reward Models That Think}, 
       author={Muhammad Khalifa and Rishabh Agarwal and Lajanugen Logeswaran and Jaekyeom Kim and Hao Peng and Moontae Lee and Honglak Lee and Lu Wang},
       year={2025},
-      eprint={2504.16828},
-      archivePrefix={arXiv},
+      journal={arXiv preprint arXiv:2504.16828},
       primaryClass={cs.LG},
       url={https://arxiv.org/abs/2504.16828}, 
 }
