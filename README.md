@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Github](https://img.shields.io/badge/ThinkPRM-000000?style=for-the-badge&logo=github&logoColor=000&logoColor=white)](https://github.com/mukhal/thinkprm)  [![Data](https://img.shields.io/badge/Data-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=yellow
+[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Data](https://img.shields.io/badge/Data-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=yellow
 )](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots)  [![ThinkPRM](https://img.shields.io/badge/ThinkPRM1.5B-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=purple
 )](https://huggingface.co/launch/ThinkPRM-1.5B)  [![ThinkPRM](https://img.shields.io/badge/ThinkPRM14B-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=brown
 )](https://huggingface.co/launch/ThinkPRM-14B)
