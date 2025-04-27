@@ -31,7 +31,7 @@
 
 # 📖Introduction
 
-We introduce ThinkPRM, a collection of generative long CoT process reward models. ThinkPRM verifiers are trained using 1K synthetic verification CoTs that are filtered based on only on 8K process labels from PRM800K. 
+We introduce ThinkPRM, a collection of generative long CoT process reward models. Our verifiers are obtained by finetuning reasoning models over 1K synthetic verification CoTs---filtered based on only on 8K process labels from PRM800K. The resulting verifiers outperform LLM-as-a-judge, discriminative PRMs, on most in- and out-of-domain setups. ThinkPRM enables scaling up verifier  compute either in parallel or sequentially by thinking longer.
 
 
 # ✨Getting Started
