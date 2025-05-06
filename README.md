@@ -14,6 +14,8 @@
   <p>
     <a href="#news" style="text-decoration: none; font-weight: bold;">🎉 News</a> •
     <a href="#introduction" style="text-decoration: none; font-weight: bold;">📖 Introduction</a>
+    <a href="#data-cikkectuib" style="text-decoration: none; font-weight: bold;">📀 Data Collection</a>
+
   </p>
   <p>
     <a href="#getting-started" style="text-decoration: none; font-weight: bold;">✨ Getting Started</a> •
@@ -33,7 +35,9 @@
 
 We introduce ThinkPRM, a collection of generative long CoT process reward models. Our verifiers are obtained by finetuning reasoning models over 1K synthetic verification CoTs---filtered based on only on 8K process labels from PRM800K. The resulting verifiers outperform LLM-as-a-judge, discriminative PRMs, on most in- and out-of-domain setups. ThinkPRM enables scaling up verifier  compute either in parallel or sequentially by thinking longer.
 
-![image](https://github.com/user-attachments/assets/4fc1a558-4005-4f2f-8b10-0c0b4616592f)
+<div align="center">
+<img src="https://github.com/user-attachments/assets/4fc1a558-4005-4f2f-8b10-0c0b4616592f" alt="image" width="600"/>
+</div>
 
 # 📀Data Collection
 ThinkPRM was trained on synthetic verification CoTs. This dataset contains 1,000 high-quality synthetic verification chains-of-thought (CoTs) designed for training generative Process Reward Models (PRMs), as used in the paper ["Process Reward Models that Think"](https://arxiv.org/abs/2504.16828). The goal was to create a data-efficient alternative to traditional PRM training which often requires extensive human annotation or expensive rollouts.
