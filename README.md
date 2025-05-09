@@ -1,12 +1,16 @@
 # Process Reward Models That Think
 
 <div align="center">
-
-[![Paper](https://img.shields.io/badge/paper-A42C25?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2504.16828)  [![Data](https://img.shields.io/badge/Data-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=yellow
-)](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots)  [![ThinkPRM](https://img.shields.io/badge/ThinkPRM1.5B-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=purple
-)](https://huggingface.co/launch/ThinkPRM-1.5B)  [![ThinkPRM](https://img.shields.io/badge/ThinkPRM14B-white?style=for-the-badge&logo=huggingface&logoColor=orange&color=skyblue
-)](https://huggingface.co/launch/ThinkPRM-14B)
-
+  <a href="https://arxiv.org/abs/2504.16828">
+    <img src="https://img.shields.io/badge/Paper-arXiv-red">
+  </a>
+  <a href="https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots">
+    <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-green">
+  </a>
+  <a href="https://huggingface.co/collections/launch/thinkprm-681d7a7c5e8bfcfb5fc6d7bb">
+    <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Collections-blue">
+  </a>
+</div>
 
 
 
@@ -14,7 +18,7 @@
   <p>
     <a href="#news" style="text-decoration: none; font-weight: bold;">🎉 News</a> •
     <a href="#introduction" style="text-decoration: none; font-weight: bold;">📖 Introduction</a>
-    <a href="#data-cikkectuib" style="text-decoration: none; font-weight: bold;">📀 Data Collection</a>
+    <a href="#data-collection" style="text-decoration: none; font-weight: bold;">📄 Data Collection</a>
 
   </p>
   <p>
