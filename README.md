@@ -1,4 +1,4 @@
-# Process Reward Models That Think
+# Process Reward Models That Think 🧠
 
 <div align="center">
   <a href="https://arxiv.org/abs/2504.16828">
