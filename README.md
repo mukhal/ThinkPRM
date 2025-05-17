@@ -33,7 +33,7 @@
 - **[2025-04-23]** Our [paper](https://arxiv.org/abs/2504.16828) is released on arxiv.
 - **[2025-04-24]** Our synthetic verification CoTs used to train ThinkPRM on are now on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
 - **[2025-04-25]** Our trained PRMs are released in two sizes: [1.5B](https://huggingface.co/launch/ThinkPRM-1.5B) and [14B](https://huggingface.co/launch/ThinkPRM-14B) finetuned from R1-Distill-Qwen models.
-- - **[2025-05-16]** To provide a balanced performance between 1.5B and 14B, we have upload [ThinkPRM-7B](https://huggingface.co/launch/ThinkPRM-7B), based on Deepseek-R1-Distill-Qwen-7B and finetuned on our data. 
+- **[2025-05-16]** To provide a balanced performance between 1.5B and 14B, we have upload [ThinkPRM-7B](https://huggingface.co/launch/ThinkPRM-7B), based on Deepseek-R1-Distill-Qwen-7B and finetuned on our data. 
 
 # 📖Introduction
 
