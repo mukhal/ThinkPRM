@@ -33,6 +33,7 @@
 </div>
 
 # 🎉News
+- **[2025-07-3]** Gave a talk at Tsinghua university on ThinkPRM. Slides are [here](https://docs.google.com/presentation/d/1O7HIoQLFn6ACJgAwD-e_O8c643fQUSRqbjJjO4S4s2I/edit?usp=sharing). 
 - **[2025-07-2]** We have released code for running test-time scaling experiments with ThinkPRM!.
 - **[2025-04-23]** Our [paper](https://arxiv.org/abs/2504.16828) is released on arxiv.
 - **[2025-04-24]** Our synthetic verification CoTs used to train ThinkPRM on are now on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
