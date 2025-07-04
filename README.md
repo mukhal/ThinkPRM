@@ -133,8 +133,8 @@ prm_n: 1               # only supports a single chain
 n_thinking_rounds: 1   # Number of sequential thinking rounds
 ```
 
-## note: we do not support both types at the same time. 
-## note: sequential scaling is substantially slower than parallel scaling.  
+**note**: we do not support both types at the same time. 
+**note**: sequential scaling is substantially slower than parallel scaling.  
 
 ## Running the Experiments
 As described in the paper, we scale verifier verifier compute with ThinkPRM in two ways: parallel by sampling K independent verification chains and aggregating scores over them, or sequentially via some form of budget forcing. We include two example recipes [here](search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/beam_search/thinkprm_parallel_scaling.yaml) and [here](search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/beam_search/thinkprm_sequential_scaling.yaml)
