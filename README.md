@@ -62,7 +62,44 @@ The dataset was created to enable efficient training of powerful generative PRMs
 
 # ✨Getting Started
 
-*Code is coming soon.*
+## Quick Start
+
+1. **Installation**: Follow the installation instructions in the [search-and-learn README](search-and-learn/README.md)
+
+2. **Running ThinkPRM**: Use the provided recipes to run ThinkPRM with different models and configurations:
+   ```bash
+   # Example: Run ThinkPRM with Qwen2.5-14B model
+   python search-and-learn/scripts/test_time_compute.py \
+     search-and-learn/recipes/MATH-100/Qwen2.5-14B/best_of_n_thinkprm.yaml \
+     --dataset_name="HuggingFaceH4/MATH-500" \
+     --model_path="Qwen/Qwen2.5-14B-Instruct" \
+     --prm_type="thinkprm"
+   ```
+
+3. **Available Models**: 
+   - [ThinkPRM-1.5B](https://huggingface.co/launch/ThinkPRM-1.5B)
+   - [ThinkPRM-7B](https://huggingface.co/launch/ThinkPRM-7B) 
+   - [ThinkPRM-14B](https://huggingface.co/launch/ThinkPRM-14B)
+
+4. **Scaling Options**:
+   - **Parallel Scaling**: Increase `prm_n` for parallel verification
+   - **Sequential Scaling**: Increase `n_thinking_rounds` for sequential thinking
+   - **Beam Search**: Use beam search approach for guided exploration
+
+## Project Structure
+
+```
+├── prm/                           # Process Reward Model implementations
+│   ├── sglang_thinkprm_verifier.py  # API-based ThinkPRM verifier
+│   ├── thinkprm_verifier.py         # Local ThinkPRM verifier
+│   ├── sglang_prm.py               # Generative PRM implementation
+│   └── process_reward_model.py     # Discriminative PRM implementation
+├── search-and-learn/              # Main search and learning framework
+│   ├── scripts/                   # Execution scripts
+│   ├── recipes/                   # Configuration files
+│   └── src/sal/                   # Core search algorithms
+└── README.md                      # This file
+```
 
 
 # 🎈Citation

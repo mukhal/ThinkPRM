@@ -1,0 +1,16 @@
+.idea/
+notebooks/
+__pycache__/
+*.egg-info/
+*.log
+*.egg-info/
+*.tmp
+.env
+.run/
+logs/
+temp/
+scripts/
+gpt-plan-benchmark/
+gpt-plan-benchmark
+.DS_Store
+.vscode/

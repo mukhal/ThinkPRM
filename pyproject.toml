@@ -1,0 +1,44 @@
+[project]
+name = "thinkprm"
+version = "1.0.0"
+description = "Process Reward Models That Think - A collection of generative long CoT process reward models"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate==0.34.0",
+    "antlr4-python3-runtime==4.7.2",
+    "bitsandbytes>=0.46.0",
+    "datasets==2.19.1",
+    "fairscale==0.4.13",
+    "fire==0.6.0",
+    "flask==3.1.0",
+    "ipdb==0.13.13",
+    "jsonlines==4.0.0",
+    "langchain==0.3.7",
+    "langchain-community==0.3.7",
+    "langchain-core==0.3.18",
+    "langchain-openai==0.2.8",
+    "latex2sympy2==1.9.1",
+    "logits-processor-zoo>=0.1.12",
+    "nltk==3.9.1",
+    "openai==1.54.4",
+    "packaging==24.2",
+    "pandas==2.2.3",
+    "pebble>=5.1.1",
+    "rank-bm25==0.2.2",
+    "ray>=2.45.0",
+    "regex==2024.7.24",
+    "requests==2.32.3",
+    "safetensors==0.4.5",
+    "scikit-learn==1.5.2",
+    "sentencepiece==0.2.0",
+    "sympy>=1.12",
+    "tenacity==8.5.0",
+    "timeout-decorator>=0.5.0",
+    "tqdm==4.66.5",
+    "vllm==0.6.4.post1",
+    "waitress==3.0.1",
+    "wandb==0.17.8",
+    "websockets==13.0.1",
+    "word2number>=1.1",
+]

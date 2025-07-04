@@ -1,0 +1,18 @@
+# refer to src/sal/config.py for more options
+filter_duplicates: true
+approach: best_of_n
+n: 1
+dataset_start: 0
+dataset_end: 100
+prm_batch_size: 1
+seed: 42
+model_path: meta-llama/Llama-3.2-3B-Instruct
+prm_path: null
+output_dir: null
+prm_type: discriminative
+system_prompt: ""
+max_tokens: 16384
+dataset_name: null
+dataset_split: train
+gpu_memory_utilization: 0.95
+just_sample: true # to avoid loading the PRM

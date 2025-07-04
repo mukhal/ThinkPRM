@@ -1,0 +1,21 @@
+# refer to src/sal/config.py for more options
+filter_duplicates: true
+approach: beam_search
+n: 16
+prm_batch_size: 1
+search_batch_size: 1
+dataset_start: 0
+dataset_end: 100
+seed: 42
+model_path: Meta-Llama/Llama-3.2-3B-Instruct
+prm_path: peiyi9979/math-shepherd-mistral-7b-prm
+prm_type: discriminative
+output_dir: outputs/results/test-time-scaling/MATH-100/beam-search/Llama-3.2-3B-Instruct/mathshepherd_prm/
+temperature: .6
+prm_temperature: 0.0
+prm_type: discriminative
+system_prompt: "Solve the following math problem efficiently and clearly:\n\n- For simple problems (2 steps or fewer):\nProvide a concise solution with minimal explanation.\n\n- For complex problems (3 steps or more):\nUse this step-by-step format:\n\n## Step 1: [Concise description]\n[Brief explanation and calculations]\n\n## Step 2: [Concise description]\n[Brief explanation and calculations]\n\n...\n\nRegardless of the approach, always conclude with:\n\nTherefore, the final answer is: $\\boxed{answer}$. I hope it is correct.\n\nWhere [answer] is just the final number or expression that solves the problem."
+max_tokens: 4096
+num_iterations: 20
+beam_width: 4
+prm_device: cuda:1
