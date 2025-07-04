@@ -33,6 +33,7 @@
 </div>
 
 # 🎉News
+- **[2025-07-2]** We have released code for running test-time scaling experiments with ThinkPRM!.
 - **[2025-04-23]** Our [paper](https://arxiv.org/abs/2504.16828) is released on arxiv.
 - **[2025-04-24]** Our synthetic verification CoTs used to train ThinkPRM on are now on [huggingface](https://huggingface.co/datasets/launch/thinkprm-1K-verification-cots). 
 - **[2025-04-25]** Our trained PRMs are released in two sizes: [1.5B](https://huggingface.co/launch/ThinkPRM-1.5B) and [14B](https://huggingface.co/launch/ThinkPRM-14B) finetuned from R1-Distill-Qwen models.
@@ -62,45 +63,85 @@ The dataset was created to enable efficient training of powerful generative PRMs
 
 # ✨Getting Started
 
-## Quick Start
-
-1. **Installation**: Follow the installation instructions in the [search-and-learn README](search-and-learn/README.md)
-
-2. **Running ThinkPRM**: Use the provided recipes to run ThinkPRM with different models and configurations:
-   ```bash
-   # Example: Run ThinkPRM with Qwen2.5-14B model
-   python search-and-learn/scripts/test_time_compute.py \
-     search-and-learn/recipes/MATH-100/Qwen2.5-14B/best_of_n_thinkprm.yaml \
-     --dataset_name="HuggingFaceH4/MATH-500" \
-     --model_path="Qwen/Qwen2.5-14B-Instruct" \
-     --prm_type="thinkprm"
-   ```
-
-3. **Available Models**: 
-   - [ThinkPRM-1.5B](https://huggingface.co/launch/ThinkPRM-1.5B)
-   - [ThinkPRM-7B](https://huggingface.co/launch/ThinkPRM-7B) 
-   - [ThinkPRM-14B](https://huggingface.co/launch/ThinkPRM-14B)
-
-4. **Scaling Options**:
-   - **Parallel Scaling**: Increase `prm_n` for parallel verification
-   - **Sequential Scaling**: Increase `n_thinking_rounds` for sequential thinking
-   - **Beam Search**: Use beam search approach for guided exploration
-
-## Project Structure
+## Installation
+  We are going to create two virtual envrionments: one particularly to serve ThinkPRM using [sglang](https://github.com/sgl-project/sglang) and the other for running test-time scaling experiments. This is ncecessary to avoid dependency conflicts between sglang and other packages. We will be using uv so make sure you have it installed by following the [instructions](https://docs.astral.sh/uv/getting-started/installation).
 
 ```
-├── prm/                           # Process Reward Model implementations
-│   ├── sglang_thinkprm_verifier.py  # API-based ThinkPRM verifier
-│   ├── thinkprm_verifier.py         # Local ThinkPRM verifier
-│   ├── sglang_prm.py               # Generative PRM implementation
-│   └── process_reward_model.py     # Discriminative PRM implementation
-├── search-and-learn/              # Main search and learning framework
-│   ├── scripts/                   # Execution scripts
-│   ├── recipes/                   # Configuration files
-│   └── src/sal/                   # Core search algorithms
-└── README.md                      # This file
+uv python install 3.11
+`uv venv sglang-env`
+`uv pip install "sglang[all]>=0.4.8.post1"`
 ```
 
+now let's setup the other main environment
+```bash
+uv venv
+uv sync
+```
+   
+
+## Running ThinkPRM: Use the provided recipes to run ThinkPRM with different models and configurations:
+
+First of all we need to serve one of the ThinkPRM [models](https://huggingface.co/collections/launch/thinkprm-681d7a7c5e8bfcfb5fc6d7bb).
+
+The available models are:
+   - [launch/ThinkPRM-1.5B](https://huggingface.co/launch/ThinkPRM-1.5B)
+   - [launch/ThinkPRM-7B](https://huggingface.co/launch/ThinkPRM-7B) 
+   - [launch/ThinkPRM-14B](https://huggingface.co/launch/ThinkPRM-14B)
+
+
+```bash
+source sglang-env/bin/activate
+`uv run --active python -m sglang.launch_server --grammar-backend xgrammar --model-path launch/ThinkPRM-1.5B --port 31111 --host 127.0.0.1`
+```
+This should start an Sglang server with ThinkPRM-1.5B ready to roll. 
+
+
+Now we can run best-of-N or verifier-guided beam search as follows. Note that every experiment in the paper is described using a .yaml recipe file. These are located in [search-and-learn/recipes/](search-and-learn/recipes/)
+
+Now, switch to a new terminal and cd into the project directory. To run best-of-N on MATH-500 with Llama-3.2-3B-Instruct as the generator, this correponds to the recipe in [search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/best_of_n/thinkprm.yaml](search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/best_of_n/thinkprm.yaml)
+
+
+```bash
+source .venv/bin/activate
+CUDA_VISIBLE_DEVICES=1 uv run python search-and-learn/scripts/test_time_compute.py search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/best_of_n/thinkprm.yam
+```
+This should sample solutions from the generator model over MATH-500 dataset, score samples using ThinkPRM, and then at the end it will also calculate accuracy for different N values and store these in config.output_dir. 
+
+### Parallel and Sequential Scaling with ThinkPRM 
+
+
+<div align="center">
+<img src="https://github.com/user-attachments/assets/7a7e88ac-0bd2-494d-8b54-00fb63054ee7" alt="image" width="800"/>
+</div>
+
+ThinkPRM supports two types of scaling:
+- **Parallel Scaling**: Multiple PRM evaluations run simultaneously
+- **Sequential Scaling**: Multiple thinking rounds in sequence
+
+## Configuration Differences
+
+### Parallel Scaling
+```yaml
+prm_temperature: 0.4    
+prm_n: 4               # 4 parallel verification CoTs
+```
+
+### Sequential Scaling
+```yaml
+prm_temperature: 0.0    
+prm_n: 1               # only supports a single chain
+n_thinking_rounds: 1   # Number of sequential thinking rounds
+```
+
+## note: we do not support both types at the same time. 
+## note: sequential scaling is substantially slower than parallel scaling.  
+
+## Running the Experiments
+As described in the paper, we scale verifier verifier compute with ThinkPRM in two ways: parallel by sampling K independent verification chains and aggregating scores over them, or sequentially via some form of budget forcing. We include two example recipes [here](search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/beam_search/thinkprm_parallel_scaling.yaml) and [here](search-and-learn/recipes/MATH-500/Llama-3.2-3B-Instruct/beam_search/thinkprm_sequential_scaling.yaml)
+
+
+# Acknowledgements
+This project would not be possible without the efforts from the open-source community, artpicularly repos like [search-and-learn](https://github.com/huggingface/search-and-learn), [vllm](https://github.com/vllm-project/vllm/) and the awesome [sglang](https://github.com/sgl-project/sglang).
 
 # 🎈Citation
 If you find ThinkPRM helpful, please cite us.
