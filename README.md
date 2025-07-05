@@ -69,8 +69,8 @@ The dataset was created to enable efficient training of powerful generative PRMs
 
 ```
 uv python install 3.11
-`uv venv sglang-env`
-`uv pip install "sglang[all]>=0.4.8.post1"`
+uv venv sglang-env
+uv pip install "sglang[all]>=0.4.8.post1"
 ```
 
 now let's setup the other main environment
@@ -92,7 +92,7 @@ The available models are:
 
 ```bash
 source sglang-env/bin/activate
-`uv run --active python -m sglang.launch_server --grammar-backend xgrammar --model-path launch/ThinkPRM-1.5B --port 31111 --host 127.0.0.1`
+uv run --active python -m sglang.launch_server --grammar-backend xgrammar --model-path launch/ThinkPRM-1.5B --port 31111 --host 127.0.0.1
 ```
 This should start an Sglang server with ThinkPRM-1.5B ready to roll. 
 
