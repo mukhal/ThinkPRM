@@ -284,6 +284,10 @@ class ThinkPRM:
                 )
                 if not step_labels:
                     logger.warning("No correct/incorrect decisions generated")
+                    
+                if len(step_labels) < len(prefix_steps_batch[i]):
+                    #### model stopped after an incorrect step, pad with 0
+                    step_labels = step_labels + [0] * (len(prefix_steps_batch[i]) - len(step_labels))
 
                 all_prefix_scores.append(prefix_scores[-1]) #### the last step score is the full prefix score
                 all_step_labels.append(step_labels)
@@ -295,13 +299,13 @@ class ThinkPRM:
             if not all_step_labels:
                 all_step_labels = [None]
              
-            full_prefix_score = all_prefix_scores[-1]
+            full_prefix_score = np.mean(all_prefix_scores) ## average across parallel cots
 
             info = {
                 'step_labels': all_step_labels, 
                 'inputs': input_text,
                 'outputs': all_outputs,
-                'prefix_score': full_prefix_score,
+                'prefix_score': full_prefix_score,  
             }
             
             results.append(info)
@@ -342,123 +346,125 @@ class ThinkPRM:
         return self._process_batch_outputs(outputs, inputs, prefix_steps_batch)
     
     
-    def predict_correctness_batch_sequential_scaling(self, questions: list[str], prefix_steps_batch: list[list[str]]) -> list[tuple[float, dict]]:
+    def predict_correctness_batch_sequential_scaling(self, questions: list[str], prefix_steps_batch: list[list[str]]) -> list[dict]:
+        """
+        Predict correctness for a batch of questions and reasoning steps using sequential scaling.
+        
+        Args:
+            questions: List of questions to evaluate
+            prefix_steps_batch: List of reasoning steps for each question
+            
+        Returns:
+            List of dictionaries containing correctness scores and detailed info
+        """
         # Process all examples in the batch
         inputs = [self.process_example(question, prefix_steps) 
-                       for question, prefix_steps in zip(questions, prefix_steps_batch)]
+                 for question, prefix_steps in zip(questions, prefix_steps_batch)]
+        
+        input_prompts = inputs
         
         n = self.sampling_params.n
-        self.sampling_params.stop = ['Is the solution correct?'] # since these models were trained to generate this at the end.
-        self.sampling_params.max_tokens = self.max_gen_tokens - 20 # leave 50 tokens for the final decision
-        self.sampling_params.logits_processors = [] ## reset logits processors
+        self.sampling_params.stop = ['Is the solution correct?']
+        self.sampling_params.max_tokens = self.max_gen_tokens - 10
+        self.sampling_params.logits_processors = []
         
-        print("Generating up to {} tokens for {} rounds".format(self.sampling_params.max_tokens, self.n_thinking_rounds))
+        logger.info("Generating up to {} tokens for {} rounds".format(self.sampling_params.max_tokens, self.n_thinking_rounds))
         
         # Generate multiple thinking rounds
-        all_cot_outputs = []
         for round in range(self.n_thinking_rounds):
-            # Generate outputs until "Is the solution correct?"
-            cot_outputs = self.llm.generate(inputs, self.sampling_params, use_tqdm=False)           
-            all_cot_outputs.append(cot_outputs)
+            cot_outputs = self.llm.generate(inputs, self.sampling_params, use_tqdm=False)
             
-            # Add wait string between rounds except for last round
+            # Add trigger phrases between rounds except for last round
             if round < self.n_thinking_rounds - 1:
-                inputs = [input + output.outputs[0].text.strip() + "\n" + self.trigger_phrases[round] for input, output in zip(inputs, cot_outputs)]
-                #### remvoe </think> from inputs
-                inputs = [input.replace('</think>', '') for input in inputs]
-                
-                ## remove endofsequence token from inputs
-                inputs = [input.replace(self.tokenizer.eos_token, '') for input in inputs]
+                inputs = [input + output.outputs[0].text.strip() + "\n\n" + self.trigger_phrases[round] 
+                         for input, output in zip(inputs, cot_outputs)]
+                inputs = [input.replace('</think>', '').replace(self.tokenizer.eos_token, '') 
+                         for input in inputs]
         
-        # Combine all outputs
-        cot_outputs = all_cot_outputs[-1] # Use last round's outputs        
-        
+        # Setup for final decision generation
         predecision_string = 'Is the solution correct?'
         self.correct_token = ' Yes'
         self.incorrect_token = ' No'
-        multiple_choice_processor = MultipleChoiceLogitsProcessor(tokenizer=self.tokenizer, choices=[self.correct_token, self.incorrect_token])
-        # Second generation to get final yes/no for all examples at once
+        multiple_choice_processor = MultipleChoiceLogitsProcessor(
+            tokenizer=self.tokenizer, 
+            choices=[self.correct_token, self.incorrect_token]
+        )
+        
         self.sampling_params.stop = []
         self.sampling_params.max_tokens = 1
         self.sampling_params.logits_processors = [multiple_choice_processor]
 
-        ############ FINAL Decision ############
+        # Prepare inputs for final decision
         predecision_input_ids = []
         for i, batch_outputs in enumerate(cot_outputs):
             input_ids = self.tokenizer(inputs[i], add_special_tokens=False).input_ids
             predecision_string_ids = self.tokenizer(predecision_string, add_special_tokens=False).input_ids
+            
             for output in batch_outputs.outputs:
-                # Combine input ids, output token ids, and predecision string ids
-                
-                output_ids = [i for i in output.token_ids]
+                output_ids = [token_id for token_id in output.token_ids]
                 combined_ids = input_ids + output_ids
-                ## if predecision string not in output, then add it 
+                
+                # Add predecision string if not already present
                 if predecision_string_ids[-3:] != output_ids[-3:]:
                     combined_ids += predecision_string_ids
-                # Convert back to text
+                    
                 predecision_input_ids.append(combined_ids)
-                
-                
-        final_decisions = self.llm.generate(prompt_token_ids=predecision_input_ids, sampling_params=self.sampling_params, use_tqdm=False)
         
+        # Generate final decisions
+        final_decisions = self.llm.generate(
+            prompt_token_ids=predecision_input_ids, 
+            sampling_params=self.sampling_params, 
+            use_tqdm=False
+        )
         
+        # Process results
         results = []
         output_idx = 0
+        
         for i, (input_text, cot_output) in enumerate(zip(inputs, cot_outputs)):
-            # Process all generations for this input
-            all_step_scores = []
+            all_prefix_scores = []
             all_step_labels = []
             all_outputs = []
             
             for j in range(n):
-                cot_output = cot_output.outputs[j].text
-                
+                cot_text = cot_output.outputs[j].text
                 final_decision = final_decisions[output_idx].outputs[0].text
                 final_decision_logprobs = final_decisions[output_idx].outputs[0].logprobs
                 
-                                
-                # Get step scores and labels from first generation
-                step_scores = self._extract_score_from_logprobs(final_decision_logprobs, final_decision, prefix_steps_batch[i])
+                # Extract scores from logprobs
+                step_scores = self._extract_score_from_logprobs(
+                    final_decision_logprobs, final_decision, prefix_steps_batch[i]
+                )
+                
                 if all(score == -1 for score in step_scores):
-                    print("Warning: No correctness scores found")
-                        
-                # Get final yes/no from second generation
-                assert final_decision.strip() in [self.correct_token.strip(), self.incorrect_token.strip()], f"Final decision is not in {self.correct_token} or {self.incorrect_token}: {final_decision.strip()}"
+                    logger.warning("Warning: No correctness scores found")
+                
+                # Convert final decision to step labels
+                assert final_decision.strip() in [self.correct_token.strip(), self.incorrect_token.strip()], \
+                    f"Final decision is not in {self.correct_token} or {self.incorrect_token}: {final_decision.strip()}"
+                
                 step_labels = [1 if final_decision.strip() == self.correct_token.strip() else 0]
-                output_idx += 1
-
-                all_step_scores.append(step_scores)
+                
+                all_prefix_scores.append(step_scores[-1] if step_scores else -1)
                 all_step_labels.append(step_labels)
-                all_outputs.append(cot_output + final_decision)
+                output = input_text[input_text.find('<think>'):] + '\n' + cot_text + '\n' + final_decision
+                all_outputs.append(output)
+                
+                output_idx += 1
             
-            cot_aggregate_method = 'all'
-            combined_step_scores = []
-
-            if cot_aggregate_method == 'all' or self.sampling_params.n == 1:
-                for step_scores in all_step_scores:
-                    combined_step_scores.extend(step_scores)
-                    
-            elif cot_aggregate_method == 'avg':
-                for step_scores in all_step_scores:
-                    if len(step_scores) > 0:
-                        combined_step_scores.append(np.mean(step_scores))
-                    
-            elif cot_aggregate_method == 'min':
-                for step_scores in all_step_scores:
-                    if len(step_scores) > 0:
-                        combined_step_scores.append(np.min(step_scores))
-            
-            if not combined_step_scores:
-                combined_step_scores = [-1]
+            if not all_prefix_scores:
+                all_prefix_scores = [-1]
+                
+            if not all_step_labels:
                 all_step_labels = [None]
              
-            full_prefix_score = np.mean(combined_step_scores)
+            full_prefix_score = np.mean(all_prefix_scores)
 
             info = {
                 'step_labels': all_step_labels, 
-                'step_scores': combined_step_scores,
-                'input_text': input_text,
-                'output_texts': all_outputs,
+                'inputs': input_prompts[i],
+                'outputs': all_outputs,
+                'prefix_score': full_prefix_score,
             }
             
             results.append(info)
